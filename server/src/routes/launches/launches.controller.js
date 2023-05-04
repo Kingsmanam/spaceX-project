@@ -6,13 +6,16 @@ function httpGetLaunches(req, res) {
 
 function httpPostLaunch(req, res) {
   const launch = req.body;
-  if (!launch.launchDate || !launch.mission || !launch.destination || !launch.rocket) {
+
+  if (!launch.launchDate || !launch.mission || !launch.target || !launch.rocket) {
     return res.status(400).json({
       status: 400,
       success: false,
       error: "missing required property",
     });
   }
+
+  launch.launchDate = new Date(launch.launchDate);
   if (isNaN(launch.launchDate)) {
     return res.status(400).json({
       status: 400,
@@ -20,7 +23,7 @@ function httpPostLaunch(req, res) {
       error: "launchDate is invalid",
     });
   }
-  launch.launchDate = new Date(launch.launchDate);
+
   addNewLaunch(launch);
   return res.status(201).json(launch);
 }
